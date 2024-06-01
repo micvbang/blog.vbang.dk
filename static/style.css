@@ -489,6 +489,10 @@ dialog::backdrop {
 
     font-size: 19px;
     font-weight: 900;
+
+    padding: 4px 16px;
+    margin: 0 8px 4px 0;
+    /* background: #f1f0e8; */
 }
 
 .post-header {
@@ -542,6 +546,7 @@ article h2 {
     text-decoration: none;
 }
 
+a,
 a:visited {
     color: var(--text);
 }
