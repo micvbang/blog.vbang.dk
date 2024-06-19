@@ -48,9 +48,9 @@ Depending on how many event triggers we need to implement, a potential drawback 
 
 As time passes and new and more complex features are added to the project, we might want to create event triggers that aren't a direct response to something that happens in the system. Such event triggers rarely have an obvious location where we can just add a one-liner. The problem is that we need knowledge from different parts of the system in one place.
 
-One obvious way to tackle this problem is to create an omniscient cron job-thingy that can pull information from all relevant parts of the system. In my mind I imagine this as an elephant that gets to roam around freely in your database, sticking its trunk into anything it likes. 
+One obvious way to tackle this problem is to create an omniscient cron job-thingy that can pull information from all relevant parts of the system. In my mind I imagine this as an octopus that gets to roam around freely in your database, sticking its tentacles into anything it likes. 
 
-![Elephant sitting inside your database](/static/posts/2024-06-19-eventdripper/elephant_sitting_desert_looking_at_data_scaled.png)
+![Octopus inside your database](/static/posts/2024-06-19-eventdripper/octopus_grabbing_data.png)
 
 The benefit of this strategy is that it can make it very explicit what information is required to trigger a certain event and where that information comes from. Additionally, depending on our needs, it might be an advantage that this allows us to place all code relating to sending notifications close together instead of sprinkling it throughout the system. Below is an example of what this might look like:
 
@@ -64,7 +64,7 @@ class OmniscientCronJobThingy:
 
 Since this is a cron job we have to run it at some meaningful interval, ensure that it actually runs, probably handle errors asynchronously (we don't want stop sending emails to the rest of users just because sending an email to one of them fails), and so on. All of these are problems that can be overcome, but it does come with the price of added complexity compared with the one-liner we first saw.
 
-A major drawback that our omniscient elephant introduces is that it adds a dependency on potentially the entire data model of the system. Since it's basically a component with license to ~~kill~~ read data from anywhere, we have to take it into account whenever we consider making a change to almost literally any part of the system; _did one of our co-workers add an event trigger that requires knowledge from the part the system we're currently considering changing_? This problem can be mitigated somewhat by forcing the component to go through epositories instead of raw-dogging the database, but this doesn't eliminate the problem entirely. When there's an omniscient elephant tasting various parts of your data, you never quite know whether it's safe to change your data model or not. At the very least, the loose elephant will make it more cumbersome to change the data model. Been there, done that. Although pets are nice and cute, you really don't want them running around your database!
+A major drawback that our omniscient octopus introduces is that it adds a dependency on potentially the entire data model of the system. Since it's basically a component with license to ~~kill~~ read data from anywhere, we have to take it into account whenever we consider making a change to almost literally any part of the system; _did one of our co-workers add an event trigger that requires knowledge from the part the system we're currently considering changing_? This problem can be mitigated somewhat by forcing the component to go through epositories instead of raw-dogging the database, but this doesn't eliminate the problem entirely. When there's an omniscient octopus tasting various parts of your data, you never quite know whether it's safe to change your data model or not. At the very least, the loose octopus will make it more cumbersome to change the data model. Been there, done that. Although pets are nice and cute, you really don't want them running around your database!
 
 
 
@@ -73,7 +73,7 @@ Another problem we haven't discussed yet is that of using existing data models t
 To summarize: we are looking for a solution that 
 
 - avoids sprinkling email-sending code all across our application
-- avoids unwanted trunks fiddling around our tables
+- avoids unwanted tentacles fiddling around our tables
 - does not create unnecessary dependencies between components
 - does not lead us into the temptation of introducing "unnecessary" data into our existing data models
 
@@ -97,7 +97,7 @@ class UserRepository:
 
 Although there's a new name here that I haven't introduced yet (eventdripper - yay naming!), there are no tricks and it should be fairly obvious that by logging the occurrence of an event instead of reacting to it immediately, we can move the responsibility of sending emails away from the place that the event naturally occurs. In this case, the responsibility has been moved to the mysterious Ms Eventdripper.
 
-Besides delegating responsibility, another benefit of logging events is that we no longer need to keep our handsy elephant on staff. Since eventdripper is given all information required to determine which event triggers to trigger, we no longer need an omniscient entity that can snoop on the existing data model to gather information about the current state of things. This also avoids the temptation of adding new fields to our data models just to satisfy the needs of our snoop.
+Besides delegating responsibility, another benefit of logging events is that we no longer need to keep our handsy octopus on staff. Since eventdripper is given all information required to determine which event triggers to trigger, we no longer need an omniscient entity that can snoop on the existing data model to gather information about the current state of things. This also avoids the temptation of adding new fields to our data models just to satisfy the needs of our snoop.
 
 As you might have guessed from the poor naming, I've implemented a service that makes it easy to log events and react to them later. It tries to solve the problems described in this post, and it works for complex event triggers with restrictions on real-world timings. That service is called.... Eventdripper!
 
