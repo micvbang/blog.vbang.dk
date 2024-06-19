@@ -13,7 +13,7 @@ The ideas discussed here aren't new. The functional outcome of my ideas have bee
 
 Before we really get going I want to note that, although we'll be talking about sending emails, the point I'm trying to make is much more general. It just so happens that notifications are a _very_ natural context to describe this problem with. Every time I've tried to explain these ideas, I always end up going back to notifications.
 
-A final thing before we continue: I'll need a pinky promise that you won't use this spam people. No. Yes, _seriously_. Spam is easily top 3 on the list of the 7 deadly sins.
+A final thing before we continue: I'll need a pinky promise that you won't use this to spam people. No. Yes, _seriously_. Spam is easily top 3 on the list of the 7 deadly sins.
 
 We good? Alright.
 
