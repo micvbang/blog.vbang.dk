@@ -194,3 +194,5 @@ Although the implementation of eventdripper and driplang is interesting to discu
 Having just been introduced to eventdripper and driplang, you might be thinking that this looks like an overly complex solution to something that in many cases can be solved much simpler, with code closer to the first snippet I showed. In situations where your needs are simple and you don't expect to need more advanced triggers, I most likely will agree with you. In general we should not waste time overengineering things that we will not need. 
 
 The one thing I hope you take away from this: once your event triggering needs become non-trivial, I think decoupling the code that tracks and the code that reacts to events is definitely worth your while. Whether you use a DSL to implement this is another discussion. So far, it has served me well and helped solve exactly the problems I set out to solve. I'm very happy with the results!
+
+**If the post resonated with you and you are looking for someone to help you to do hard things with a computer, you can [hire me](/hire_me.html) to help you!**

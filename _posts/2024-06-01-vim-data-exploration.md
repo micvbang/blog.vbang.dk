@@ -57,3 +57,6 @@ IqHRWKquwsekkritCxsnInXbsPeLvx
 And, the best part, because we're in vim, we can undo and redo all of the commands that we run, retry failed commands (remember to add those pesky quotes around spaces for grep!!), search and replace, and the list goes on. You're only limited by your imagination and the tools you have available on the CLI.
 
 So, now you also know. Go spread the word!
+
+
+**If the post resonated with you and you are looking for someone to help you to do hard things with a computer, you can [hire me](/hire_me.html) to help you!**
