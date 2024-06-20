@@ -3,7 +3,7 @@ layout: page
 title: Hire me
 ---
 
-I'm Michael, based in Copenhagen, Denmark. I've made a living as a programmer since 2007 and I now run a consultancy, helping customers with IT related services.
+I'm Michael, based in Copenhagen, Denmark. I've made a living as a programmer since 2007 and I now run an IT consultancy, helping customers to do hard with computers.
 
 Since you're reading this, I'm assuming that you read one of my blog posts and thought it reasonated with you somehow. That makes me happy! Or, perhaps you're furious and need to tell me how wrong I am. In that case, do tell! I love learning :)
 
