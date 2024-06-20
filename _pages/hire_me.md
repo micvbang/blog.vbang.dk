@@ -36,6 +36,14 @@ I care deeply about, and have proven experience with:
 - using performance profiling to guide development
 - mentoring
 - doing code reviews
+- technical writing
+
+I'm also experienced with technical reviewing, having reviewed:
+
+- Matt Boyle's [Foundations of Debugging with Go](https://www.bytesizego.com/the-ultimate-guide-to-debugging-with-go-book)
+- Inanc Gumus's [Go by Example](https://www.manning.com/books/go-by-example)
+- Bartlomiej Plotka's [Efficient Go](https://www.oreilly.com/library/view/efficient-go/9781098105709/)
+- William Kennedy's [Ultimate Go Notebook](https://education.ardanlabs.com/courses/ultimate-go-notebook)
 
 ## References
 
