@@ -187,7 +187,7 @@ So even if we have loads of event triggers declared in eventdripper, waiting to 
 
 The only type of expression we haven't considered yet is `THEN` expressions with `WITHIN` arguments. Here, it's not only the arrival of new events that contributes to whether an expression is satisfied, but also the fact that time continues on its infinite march. I don't currently see a way of doing this that doesn't rely on a cron job having to run in the background, reevaluating expressions at some fraction of the interval of `WITHIN`'s time constraint. If you've got any ideas for how this could work, do reach out!
 
-Although the implementation of eventdripper and driplang is interesting to discuss, I'll leave these details for another blog post. For eventdripper, however, I will say that it requires surprisingly little and rather simple code, especially considering that it allows us to both describe and evaluate rather complex event triggers which otherwise have a tendency to turn into a big ball of mud.
+Although the implementation of eventdripper and driplang is interesting to discuss, I'll leave these details for another blog post. For driplang, however, I will say that it requires surprisingly little and rather simple code, especially considering that it allows us to both describe and evaluate rather complex event triggers which otherwise have a tendency to turn into a big ball of mud.
 
 # Heading back to the surface
 
