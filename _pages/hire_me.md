@@ -29,12 +29,13 @@ On a contract, I'm happy to help in any way that I can; architecting, writing co
 
 I care deeply about, and have proven experience with:
 
+- technical project leadership
+- mentoring
+- designing and implementing greenfield projects
 - writing testable, maintainable code 
 - writing tests that actually provide value
-- designing and implementing greenfield projects
 - improving maintainability and testability of existing systems
 - using performance profiling to guide development
-- mentoring
 - doing code reviews
 - technical writing
 
