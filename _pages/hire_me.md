@@ -41,13 +41,13 @@ I care deeply about, and have proven experience with:
 
 You don't have to take my word for it. Below are references from previous employers:
 
-- [2023-2024 Novo Nordisk](/static/references/Novo Nordisk - Joanna Sharman-Soares.pdf)
-- [2023 FOSS](/static/references/FOSS - Nicolas aRogvi.pdf)
-- [2022 Ejendomstorvet](/static/references/Ejendomstorvet - Jonas Krat.pdf)
-- [2021 Samsung](/static/references/Samsung - Javier Gonzalez.pdf)
+- [2023-2024 Novo Nordisk](/static/references/novo_nordisk_joanna_sharman_soares.pdf)
+- [2023 FOSS](/static/references/foss_nicolas_arogvi.pdf)
+- [2022 Ejendomstorvet](/static/references/ejendomstorvet_jonas_krat.pdf)
+- [2021 Samsung](/static/references/samsung_javier_gonzalez.pdf)
 - 2018-2020 Co-founding [noesis.gg](https://noesis.gg) and founding [cvr.dev](https://cvr.dev)
-- [2017-2018 Danske Bank](/static/references/Danske Bank - Jacob Avlund.pdf)
-- [2014-2017 Eksponent](/static/references/Eksponent - Christian Dalager.pdf)
+- [2017-2018 Danske Bank](/static/references/danske_bank_jacob_avlund.pdf)
+- [2014-2017 Eksponent](/static/references/eksponent_christian_dalager.pdf)
 
 
 ## Contact
