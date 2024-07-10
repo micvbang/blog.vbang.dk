@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Simple event broker tries Tiger Style"
-date:   2024-07-07 22:55:00 +0200
+date:   2024-07-10 13:20:00 +0200
 tags: [event-broker, benchmarking, seb, performance]
 ---
 
@@ -255,9 +255,9 @@ Let's see whether our interpretation of Tiger Style back-of-the-envelope changes
 
 ![Profiling Seb, adding records, mid](/static/posts/2024-07-07-seb-write-performance/profiling-mime-multipart-medium.png)
 
-Not bad! `AddRecords()` has changed quite a bit. What I immediately notice is that half of the multipart parsing code has disappeared from the graph: only the left-most part is still there. It's not exactly perfect yet, as we're still spending a lot of time in `runtime.growslice`. This is likely because each byte slice allocated for the `records` variable must be expanded quite a few times to acommodate the all of the record data received.
+Not bad! `AddRecords()` has changed quite a bit. What I immediately notice is that half of the multipart parsing code has disappeared from the graph: only the left-most part is still there. It's not exactly perfect yet, as we're still spending a lot of time in `runtime.growslice`. This is likely because each byte slice allocated for the `records` variable must be expanded quite a few times to accommodate the all of the record data received.
 
-Looking at `Write()` (which is named `WriteRaw()` in the new graph), we see that the amount of pressure on the garbage collector has decreased noticably. You might notice that the allocations have moved from `Write()` up to its parent, `collectBatches()` - I've swept some minor changes under the rug here, but trust me that this isn't important to our goal.
+Looking at `Write()` (which is named `WriteRaw()` in the new graph), we see that the amount of pressure on the garbage collector has decreased noticeably. You might notice that the allocations have moved from `Write()` up to its parent, `collectBatches()` - I've swept some minor changes under the rug here, but trust me that this isn't important to our goal.
 
 Although we're seeing definite progress, I'm not entirely satisfied with the results of `AddRecords()` yet. The flame graph is showing us that a lot of time is being spent growing slices, which makes sense since `io.ReadAll()` is a generic function that starts out with a modest allocation which has to grow to accommodate the size of our batches of records.
 
