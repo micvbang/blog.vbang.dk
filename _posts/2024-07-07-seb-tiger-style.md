@@ -74,7 +74,7 @@ Using a stretchy interpretation of the Tiger Style advice of back-of-the-envelop
 
 Since `AddRecords()` is taking up most of the time, we'll focus on that first. I've listed the most relevant code below. The full function is available [here](https://github.com/micvbang/simple-event-broker/blob/76ee8661d98e6988448d88f543f38e304edb92ae/internal/httphandlers/addrecords.go#L25) if you're curious. Since the flame graph told us that this function is doing a lot of allocations, I've added comments to highlight the most obvious ones.
 
-```go
+```
 func AddRecords(log logger.Logger, s RecordsAdder) http.HandlerFunc {
     return func(w http.ResponseWriter, r *http.Request) {
         defer r.Body.Close()
@@ -105,7 +105,7 @@ Since the `record`-variable is computed once per `N` iterations of the loop it l
 
 This very high-level understanding of `AddRecords()` memory usage is enough to satisfy me for now. Let's turn to the second offender on the list, `sebrecords.Write()`.
 
-```go
+```
 func Write(wtr io.Writer, rb []Record) error {
     header := Header{
         MagicBytes:  FileFormatMagicBytes,
@@ -164,7 +164,7 @@ It looks a lot like we could do the same job with a lot fewer allocations if we 
 
 But how do we do this? If we work our way backwards, we can try to change the interface of `Write()` so that it doesn't have to do any transformations:
 
-```go
+```
 func Write(recordIndexes []uint32, records []byte) error {
     // ...
 }
@@ -176,7 +176,7 @@ Working our way backwards up the stack, we can do the same to the callers of `Ad
 
 With the changes described, the implementation of `Write()` becomes much simpler and is basically just three calls to `binary.Write()`:
 
-```go
+```
 func Write(wtr io.Writer, recordIndexes []uint32, allRecords []byte) error {
     header := Header{
         MagicBytes:  FileFormatMagicBytes,
@@ -206,7 +206,7 @@ func Write(wtr io.Writer, recordIndexes []uint32, allRecords []byte) error {
 
 `AddRecords()` becomes slightly worse to read, but I'm sure another pass could improve it:
 
-```go
+```
 func AddRecords(log logger.Logger, s RecordsAdder) http.HandlerFunc {
     return func(w http.ResponseWriter, r *http.Request) {
         defer r.Body.Close()
@@ -263,7 +263,7 @@ Although we're seeing definite progress, I'm not entirely satisfied with the res
 
 In order to fix the problem, we can allocate a pool of larger buffers that can be reused between requests. I've highlighted the added lines with comments.
 
-```go
+```
 var bufPool = syncy.NewPool(func() *bytes.Buffer { // NEW
  return bytes.NewBuffer(make([]byte, 5*sizey.MB))  // NEW
 })                                                 // NEW
