@@ -217,7 +217,7 @@ Whoop, a 3.67x improvement; we can now run the same workload in about 1/4 of the
 
 For the second time we're learning that data serialization and unnecessary memory operations have a _major_ impact on performance. By changing the user-facing interface to match the format that Seb wants the data to be in internally, we've removed a lot of work and with it a lot of allocations and memcopying. By using simple tools and comparatively small refactorings, we're seeing a _massive_ 3.67x payoff in performance. Awesome!
 
-Yet again I'll end my post by tipping my hat giving a big THANK YOU to [Jorak Dirk Greef](https://x.com/jorandirkgreef) at TigerBeetle and [Dominik Tarnov](https://x.com/DominikTornow) at Resonate for sharing all of their knowledge and helping to light a fire in the systems software community!
+Yet again I'll end my post by tipping my hat giving a big THANK YOU to [Joran Dirk Greef](https://x.com/jorandirkgreef) at TigerBeetle and [Dominik Tornow](https://x.com/DominikTornow) at Resonate for sharing all of their knowledge and helping to light a fire in the systems software community!
 
 
 ## Footnotes
