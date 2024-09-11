@@ -103,9 +103,9 @@ func (s *Topic) ReadRecords(ctx context.Context, offset uint64, maxRecords int, 
 func (rb *Parser) Records(recordIndexStart uint32, recordIndexEnd uint32) (Batch, error)
 ```
 
-At the bottom of the read path, we see that `Parser.Records()` returns a `Batch`. Seeing this is at the bottom of the call hierarchy, the returned `Batch`es must be allocated within `Parser.Records()` itself. From the description at the beginning of the post, we know that `Topic.ReadRecords()` will call `Parser.Records()` once per file that we need to read records from. This means that, with the current functino signature, we will see at least one allocation per file we need to read from. Depending on the number of records we need to read, this could cause many allocations.
+At the bottom of the read path, we see that `Parser.Records()` returns a `Batch`. Since this is at the bottom of the call hierarchy, the returned `Batch`es must be allocated within `Parser.Records()` itself. From the description at the beginning of the post, we know that `Topic.ReadRecords()` will call `Parser.Records()` once per file that we need to read. This means that, with the current function signature, we will see at least one allocation per file read. Depending on the number of records requested, this could cause many allocations.
 
-We are looking to eliminate allocations, so how do we avoid the current requirement that `Parser.Records()` must allocate a `Batch`? By giving `*Batch` as an argument instead of requiring it as a return value:
+We are looking to eliminate unproductive allocations, so how do we avoid the current requirement that `Parser.Records()` must allocate a `Batch` per call? By giving `*Batch` as an argument instead of requiring it as a return value:
 
 ```
 func (rb *Parser) Records(batch *Batch, recordIndexStart uint32, recordIndexEnd uint32) error
@@ -121,9 +121,9 @@ func (s *Topic) ReadRecords(ctx context.Context, batch *sebrecords.Batch, offset
 func (rb *Parser) Records(batch *Batch, recordIndexStart uint32, recordIndexEnd uint32) error
 ```
 
-This minor change has moved the responsibility of allocating `Batch`es from the bottom of the stack to the top. It's now the responsibility of the code that calls `Broker.GetRecords()` (in our case an HTTP handler) to provide a pre-allocated batch to be used for the request. As long as the given `*Batch` is large enough to satisfy the request, we now do at most _one_ allocation per request, regardless of how many files we need to read data from. And, with allocations being made at the top of the call stack, it's now possible to reuse buffers across requests and thereby do the same job with much fewer allocations.
+This minor change has moved the responsibility of allocating `Batch`es from the bottom of the stack to the top. It's now the responsibility of the code that calls `Broker.GetRecords()` (in our case an HTTP handler) to provide a pre-allocated batch to be used for each request. As long as the given `*Batch` is large enough to satisfy the request, we can now guarantee _at most one_ `Batch` allocation per request, regardless of how many files we need to read data from. And, with allocations being made at the top of the call stack, it's possible to reuse buffers across requests, leading to even fewer allocations.
 
-To show you what this could look like from the caller's perspective, here's a simplified version of the HTTP handler which now retrieves a `*Batch` from a pool of pre-allocated `*Batches` and passes it to `Broker.GetRecords()`:
+To show you what this could look like from the caller's perspective, here's a simplified version of the HTTP handler:
 
 ```
 type RecordsGetter interface {
@@ -151,12 +151,11 @@ func GetRecords(log logger.Logger, batchPool *syncy.Pool[*sebrecords.Batch], rg 
 
 ```
 
-Since the write path already uses the same structure, these changes also makes it possible to share our pool of buffers between the read- and write paths!
+Since the write path already uses the same structure, these changes also allow us to share the pool of `Batch`es between the read- and write paths!
 
 Additionally, since Seb [limits how many HTTP requests it wants to handle in parallel](https://github.com/micvbang/simple-event-broker/blob/master/cmd/seb/app/serve.go#L105), an extra benefit is that it's now possible to allocate all buffers that the program needs at startup! This of course comes with some drawbacks, e.g. it puts hard limits on the size of payloads, but it also comes with some superhero-like benefits: with all buffers allocated at startup, we can now determine _at deployment time_ how much memory the application will use[^0]. If the application starts at deployment, we can be confident that _it cannot go out-of-memory!_ This sounds surreal and is an absolute superpower when doing server planning and provisioning. This one took a few days to sink in for me, but once I realized the power of it, I couldn't stop thinking about how powerful that is.
 
-Alright. With the above changes implemented, it's time to put some pressure on the system again and record a new profile. The new recording resulted in the following flame graph:
-
+Alright. With the above changes implemented, it's time to put some pressure on the system and record another profile. The new recording resulted in the following flame graph:
 
 ![Profiling Seb, retrieving records, after](/static/posts/2024-09-10-seb-read-performance/profiling-mime-multipart-fast.png)
 
@@ -164,7 +163,7 @@ Oh my, this is even better than I dared hope for! We've eliminated basically all
 
 On the new flame graph we see that we're almost literally down to spending time only in `Syscall6`. Clicking around, I can tell you that the flame graph reports that `Syscall6` now takes up 91.9% of the total runtime! Approximately half of it is for reading from disk, and the other half is for writing to the network.
 
-With the very promising changes we saw on the profiles, we're ready to run some benchmarks.
+With these very promising changes it's time to benchmark.
 
 ## Benchmarking digression
 
@@ -203,7 +202,7 @@ Bytes/request:          1MiB (1048576B)
 Total bytes requested:  19.5GiB (20971520000B)
 ```
 
-Note: this workload doesn't really replicate a production scenario, where we would probably expect something like a Poisson distribution heavily skewed towards the most recent records. Also, we're not looking to understand the absolute performance of Seb here but are just looking for the relative impact of our changes.
+Note: this workload doesn't really replicate a production scenario where we would probably expect something like a Poisson distribution heavily skewed towards the most recent records. Also, we're not looking to understand the absolute performance of Seb here but are just looking for the relative impact of our changes.
 
 Without further ado, the results of the benchmarks:
 
