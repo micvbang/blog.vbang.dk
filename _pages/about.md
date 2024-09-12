@@ -1,11 +1,11 @@
 ---
 layout: page
-title: Hire me
+title: About
 ---
 
 I'm Michael, based in Copenhagen, Denmark. I've made a living as a programmer since 2007 and I now run a consultancy that helps customers do things with computers.
 
-Since you're reading this, I'm assuming that you read one of my blog posts and thought it reasonated with you somehow. That makes me happy! Or, perhaps you're furious and need to tell me how wrong I am. In that case, do tell! I love learning :)
+Since you're reading this, I'm assuming that you read one of my blog posts and thought it reasonated with you somehow. That makes me happy! Or, perhaps you're furious and need to tell me how wrong I am. In that case, do tell!
 
 You can hire me on an hourly, weekly, or monthly basis. Depending on the type of project, I'm also available for longer contracts.
 
