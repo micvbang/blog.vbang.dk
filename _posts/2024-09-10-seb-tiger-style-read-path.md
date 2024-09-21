@@ -153,7 +153,7 @@ func GetRecords(log logger.Logger, batchPool *syncy.Pool[*sebrecords.Batch], rg 
 
 Since the write path already uses the same structure, these changes also allow us to share the pool of `Batch`es between the read- and write paths!
 
-Additionally, since Seb [limits how many HTTP requests it wants to handle in parallel](https://github.com/micvbang/simple-event-broker/blob/master/cmd/seb/app/serve.go#L105), an extra benefit is that it's now possible to allocate all buffers that the program needs at startup! This of course comes with some drawbacks, e.g. it puts hard limits on the size of payloads, but it also comes with some superhero-like benefits: with all buffers allocated at startup, we can now determine _at deployment time_ how much memory the application will use[^0]. If the application starts at deployment, we can be confident that _it cannot go out-of-memory!_ This sounds surreal and is an absolute superpower when doing server planning and provisioning. This one took a few days to sink in for me, but once I realized the power of it, I couldn't stop thinking about how powerful that is.
+Additionally, since Seb [limits how many HTTP requests it wants to handle in parallel](https://github.com/micvbang/simple-event-broker/blob/master/cmd/seb/app/serve.go#L105), an extra benefit is that it's now possible to allocate all buffers that the program needs at startup! This of course comes with some drawbacks, e.g. it puts hard limits on the size of payloads, but it also comes with some superhero-like benefits: with all buffers allocated at startup, we can now determine _at deployment time_ how much memory the application will use[^0]. If the application starts at deployment, we can be confident that _it cannot go out-of-memory!_ This sounds surreal and is an absolute superpower when doing server planning and provisioning. This one took a few days to sink in for me, but once I realized the power of it, I couldn't stop thinking about it. Why aren't we aiming to build our systems like this?
 
 Alright. With the above changes implemented, it's time to put some pressure on the system and record another profile. The new recording resulted in the following flame graph:
 
@@ -179,6 +179,7 @@ The benchmarks run for this post were run on my laptop, a Lenovo T14, plugged in
 - AMD Ryzen 7 PRO 4750U
 - Micron MTFDHBA512TDV 512GB NVMe drive
 - 48 gigs of RAM
+- Ubuntu 22.04
 
 We're doing no network requests (all files are cached locally), so the NIC should be irrelevant. Also, since we're doing buffered IO on a 1GiB records, we expect reads to be mostly served from the page cache.
 
