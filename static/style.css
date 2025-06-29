@@ -481,6 +481,23 @@ dialog::backdrop {
 .header-inner {
     padding: 16px 0;
     border-bottom: 1px solid #E9EFF3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.social-links {
+    margin-left: 16px;
+}
+
+.social-link {
+    margin: 0 2px !important;
 }
 
 .header-logo-link {
